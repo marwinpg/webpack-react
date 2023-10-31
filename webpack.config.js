@@ -1,5 +1,6 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 const rulesForJavaScript = {
   test: /\.(js|jsx)$/,
@@ -14,6 +15,11 @@ const rulesForJavaScript = {
   ],
 };
 
+const rulesForStyles = {
+  test: /\.s[ac]ss$/,
+  use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"],
+};
+
 const rulesForHtml = {
   test: /\.html$/,
   use: [
@@ -23,7 +29,7 @@ const rulesForHtml = {
   ],
 };
 
-const rules = [rulesForJavaScript, rulesForHtml];
+const rules = [rulesForJavaScript, rulesForStyles];
 
 module.exports = {
   entry: "./src/index.js",
@@ -51,7 +57,10 @@ module.exports = {
     new HtmlWebpackPlugin({
       title: "React App",
       template: "./public/index.html",
-      filename: "./index.html",
+      filename: "index.html",
+    }),
+    new MiniCssExtractPlugin({
+      filename: "[name].css",
     }),
   ],
 };
