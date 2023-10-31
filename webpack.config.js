@@ -1,6 +1,30 @@
 const path = require("path");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
-/** @type {import('webpack').Configuration} */
+const rulesForJavaScript = {
+  test: /\.(js|jsx)$/,
+  exclude: /node_modules/,
+  use: [
+    {
+      loader: "babel-loader",
+      options: {
+        presets: ["@babel/preset-env", "@babel/preset-react"],
+      },
+    },
+  ],
+};
+
+const rulesForHtml = {
+  test: /\.html$/,
+  use: [
+    {
+      loader: "html-loader",
+    },
+  ],
+};
+
+const rules = [rulesForJavaScript, rulesForHtml];
+
 module.exports = {
   entry: "./src/index.js",
   output: {
@@ -10,27 +34,24 @@ module.exports = {
   resolve: {
     extensions: [".js", ".jsx"],
   },
-  module: {
-    rules: [
-      {
-        test: /\.(js|jsx)$/,
-        exclude: /node_modules/,
-        use: {
-          loader: "babel-loader",
-          options: {
-            presets: ["@babel/preset-env", "@babel/preset-react"],
-          },
-        },
-      },
-    ],
-  },
+  module: { rules },
   devServer: {
     static: {
       directory: path.join(__dirname, "dist"),
-      compress: true,
-      port: 3006,
-      open: true,
-      historyApiFallback: true,
     },
+    client: {
+      overlay: false,
+    },
+    compress: true,
+    port: 3006,
+    open: true,
+    historyApiFallback: true,
   },
+  plugins: [
+    new HtmlWebpackPlugin({
+      title: "React App",
+      template: "./public/index.html",
+      filename: "./index.html",
+    }),
+  ],
 };
