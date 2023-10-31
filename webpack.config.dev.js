@@ -37,8 +37,6 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, "dist"),
     filename: "bundle.js",
-    clean: true,
-    publicPath: "/",
   },
   resolve: {
     extensions: [".js", ".jsx"],
@@ -47,11 +45,20 @@ module.exports = {
       "@styles": path.resolve(__dirname, "src/styles/"),
     },
   },
-  mode: "production",
-  optimization: {
-    minimize: true,
-  },
+  mode: "development",
   module: { rules },
+  devServer: {
+    static: {
+      directory: path.join(__dirname, "dist"),
+    },
+    client: {
+      overlay: false,
+    },
+    compress: true,
+    port: 3006,
+    open: true,
+    historyApiFallback: true,
+  },
   plugins: [
     new HtmlWebpackPlugin({
       title: "React App",
